@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .views import DizimistaListCreateAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/dizimistas/', DizimistaListCreateAPIView.as_view(), name='dizimistas'),
 ]
