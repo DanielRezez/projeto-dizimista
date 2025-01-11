@@ -1,3 +1,5 @@
+#Configurações automáticas e específicas do app dentro do projeto Django
+
 from django.apps import AppConfig
 
 

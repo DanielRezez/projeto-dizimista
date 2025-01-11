@@ -1,3 +1,5 @@
+#Configura a interface administrativa do Django, organizando o que pode ser visível e gerenciável no Django Admin
+
 from django.contrib import admin
 from .models import Dizimista
 
@@ -7,5 +9,5 @@ from .models import Dizimista
 
 class DizimistaAdmin(admin.ModelAdmin):
     list_display = ('nome', 'data_nascimento', 'email', 'telefone', 'situacao')
-    search_fields = ('nome', 'email', 'id_paroquia')
+    search_fields = ('nome', 'situacao', 'id_paroquia')
     list_filter = ('situacao', 'id_paroquia')

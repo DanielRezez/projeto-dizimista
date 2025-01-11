@@ -1,3 +1,5 @@
+#Mapeia as URLs do app para as views correspondentes
+
 """
 URL configuration for back_end project.
 
@@ -16,9 +18,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import DizimistaListCreateAPIView
+from .views import DizimistaAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/dizimistas/', DizimistaListCreateAPIView.as_view(), name='dizimistas'),
+    path('api/dizimistas/', DizimistaAPIView.as_view(), name='dizimistas'),
+    path('api/dizimistas/<int:pk>/', DizimistaAPIView(), name='dizimista-detail'),
 ]
