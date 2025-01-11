@@ -18,10 +18,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import DizimistaAPIView
+from dizimistas.views import DizimistaAPIView
+from novos_dizimistas.views import NovoDizimistaAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/dizimistas/', DizimistaAPIView.as_view(), name='dizimistas'),
-    path('api/dizimistas/<int:pk>/', DizimistaAPIView(), name='dizimista-detail'),
+    path('api/dizimistas/<int:pk>/', DizimistaAPIView().as_view(), name='dizimista-detail'),
+    path('api/novos-dizimistas/', NovoDizimistaAPIView.as_view(), name='novos-dizimistas'),
+    path('api/novos-dizimistas/<int:pk>/', NovoDizimistaAPIView().as_view(), name='novo_dizimista-detail'),
 ]

@@ -8,8 +8,3 @@ class DizimistaSerializer(serializers.ModelSerializer):
         model = Dizimista
         fields = '__all__'
         
-    def validate_email(self, value):
-        if not '@' in value:
-            raise serializers.ValidationError("Insira um e-mail válido.")
-        
-        return value
