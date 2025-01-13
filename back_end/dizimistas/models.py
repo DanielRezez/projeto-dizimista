@@ -16,6 +16,8 @@ class Dizimista(models.Model):
     email_permission = models.BooleanField(default=True)
     situacao = models.CharField(max_length=1, choices=[('A', 'Ativo'), ('I', 'Inativo')], default='A')
     
+    
+    #Especifica como cada instância de um modelo é exibida no Django Admin ou mesmo em prints de shell interativo
     def __str__(self):
         return self.nome
     
