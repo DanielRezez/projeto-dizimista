@@ -19,7 +19,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from dizimistas.views import DizimistaAPIView
-from novos_dizimistas.views import NovoDizimistaAPIView, TransformarDizimistaAPIView
+from novos_dizimistas.views import NovoDizimistaAPIView, TransferirDizimistaAPIView
+from paroquia.views import ParoquiaAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,5 +28,7 @@ urlpatterns = [
     path('api/dizimistas/<int:pk>/', DizimistaAPIView().as_view(), name='dizimista-detail'),
     path('api/novos-dizimistas/', NovoDizimistaAPIView.as_view(), name='novos-dizimistas'),
     path('api/novos-dizimistas/<int:pk>/', NovoDizimistaAPIView().as_view(), name='novo_dizimista-detail'),
-    path('api/novos-dizimistas/<int:pk>/transformar/', TransformarDizimistaAPIView.as_view(), name='transformar-dizimista'),
+    path('api/novos-dizimistas/transferir-novo-dizimista/<int:pk>/', TransferirDizimistaAPIView.as_view(), name='transformar-dizimista'),
+    path('api/paroquias/', ParoquiaAPIView.as_view(), name='paroquias'),
+    path('api/paroquias/<int:pk>/', ParoquiaAPIView.as_view(), name='paroquias-detail'),
 ]

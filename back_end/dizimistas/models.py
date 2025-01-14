@@ -3,10 +3,11 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from phonenumber_field.modelfields import PhoneNumberField
+from paroquia.models import Paroquia
 
 # Create your models here.
 class Dizimista(models.Model):
-    id_paroquia = models.IntegerField()
+    id_paroquia = models.ForeignKey(Paroquia, null=True, blank=False, on_delete=models.CASCADE, db_column='id_paroquia')
     ficha = models.IntegerField()
     nome = models.CharField(max_length=255)
     data_nascimento = models.DateField()
@@ -23,7 +24,6 @@ class Dizimista(models.Model):
     
     #Define metadados, restrições e modos de funcionamento
     class Meta:
-        unique_together = ('id_paroquia', 'ficha')
         db_table = 'tb_dizimistas'
         permissions = [
             ('can_view_dizimista', 'Can view dizimista'),
@@ -32,12 +32,12 @@ class Dizimista(models.Model):
         
     def clean(self):
         #Validação customizada para garantir que não existam dizimistas com ficha duplicadas
-        if Dizimista.objects.filter(id_paroquia=self.id_paroquia, ficha=self.ficha).exclude(pk=self.pk).exists():
+        if Dizimista.objects.filter(id_paroquia=self.id_paroquia, ficha=self.ficha, situacao='A').exclude(pk=self.pk).exists():
             raise ValidationError('Já existe um dizimista com esse número nesta paróquia!')
         
-        if Dizimista.objects.filter(email=self.email).exclude(pk=self.pk).exists():
+        if self.email and Dizimista.objects.filter(email=self.email, situacao='A').exclude(pk=self.pk).exists():
             raise ValidationError('Esse e-mail já está em uso!')
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.full_clean()
-        super().save()
+        super().save(*args, **kwargs)

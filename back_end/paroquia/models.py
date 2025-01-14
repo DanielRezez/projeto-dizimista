@@ -13,6 +13,6 @@ class Paroquia(models.Model):
     class Meta:
         db_table = 'tb_paroquia'
         
-    def save(self):
+    def save(self, *args, **kwargs):
         self.nome = self.nome.title()
-        super().save()
+        super().save(*args, **kwargs)

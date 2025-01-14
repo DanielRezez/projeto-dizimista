@@ -7,5 +7,3 @@ from .models import Paroquia
 
 class ParoquiaAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome', 'situacao')
-    search_fields = ('nome')
-    list_filter = ('situacao')
