@@ -1,10 +1,12 @@
 #Lida com as requisições HTTP e define a lógica de processamento e resposta às ações do usuário
 
+from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Dizimista
-from .serializers import DizimistaSerializer
+from .models import Dizimista, NovoDizimista
+from .serializers import DizimistaSerializer, NovoDizimistaSerializer
+from django.db.models import Q
 
 # Create your views here.
 
@@ -55,3 +57,18 @@ class DizimistaAPIView(APIView):
             return Response(serializer.data)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AniversariantesAPIView(APIView):
+    def get(self, request):
+        data_inicio = request.GET.get('data_inicio', None)
+        data_fim = request.GET.get('data_fim', None)
+        
+        if data_inicio and data_fim:
+            data_inicio = datetime.strptime(data_inicio, '%Y-%m-%d').date()
+        
+        else:
+            data_inicio = data_fim = datetime.now().date()
+            
+        dizimistas = Dizimista.objects.filter(
+            Q(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day) | Q(data_nascimento__range = [data_inicio, data_fim])
+        )
