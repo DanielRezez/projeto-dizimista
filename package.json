@@ -10,9 +10,9 @@
     "prepare": "husky install"
   },
   "scripts": {
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "test": "echo \"No tests specified\""
   },
-  "test": "echo \"No tests specified\"",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

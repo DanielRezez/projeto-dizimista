@@ -73,6 +73,7 @@ yarn.lock
 *.css.map
 *.js.map
 
-/organizacao-e-requisitos/
-
-.superuser.txt
+documents/
+README.md
+superuser.txt
+tarefas pendentes.txt
