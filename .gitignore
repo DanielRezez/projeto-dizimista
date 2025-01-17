@@ -1,1 +1,5 @@
-/docs/
+# Ignora tudo na pasta docs
+/docs/*
+
+# Faz uma exceção para o arquivo preview.png
+!/docs/images/preview.png
