@@ -113,3 +113,31 @@ class TransferirDizimistaAPIView(APIView):
                 {"error": f"Erro ao transformar o dizimista: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 
             )
+            
+class NovosAniversariantesAPIView(APIView):
+    def get(self, request):
+        data_inicio = request.GET.get('data_inicio', None)
+        data_fim = request.GET.get('data_fim', None)
+        
+        if data_inicio and data_fim:
+            try:
+                data_inicio = datetime.strptime(data_inicio, '%Y-%m-%d').date()
+                data_fim = datetime.strptime(data_fim, '%Y-%m-%d').date()
+
+            except ValueError:
+                return Response({"error": "Formato de data inválido. Use AAAA-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            data_inicio = data_fim = datetime.now().date()
+        
+        if data_inicio != data_fim:
+            
+            aniversariantes = NovoDizimista.objects.filter(
+                Q(data_nascimento__month__gte=data_inicio.month, data_nascimento__day__gte=data_inicio.day) &
+                Q(data_nascimento__month__lte=data_fim.month, data_nascimento__day__lte=data_fim.day))
+        
+        else:
+            aniversariantes = NovoDizimista.objects.filter(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day)
+        
+        aniversariantes_serializer = NovoDizimistaSerializer(aniversariantes, many=True)
+        
+        return Response({"aniversariantes": aniversariantes_serializer.data}, status=status.HTTP_200_OK)

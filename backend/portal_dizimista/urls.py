@@ -18,17 +18,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from dizimistas.views import DizimistaAPIView
-from novos_dizimistas.views import NovoDizimistaAPIView, TransferirDizimistaAPIView
+from dizimistas.views import DizimistaAPIView, AniversariantesAPIView
+from novos_dizimistas.views import NovoDizimistaAPIView, TransferirDizimistaAPIView, NovosAniversariantesAPIView
 from paroquia.views import ParoquiaAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/dizimistas/', DizimistaAPIView.as_view(), name='dizimistas'),
-    path('api/dizimistas/<int:pk>/', DizimistaAPIView().as_view(), name='dizimista-detail'),
+    path('api/dizimistas/<int:pk>/', DizimistaAPIView.as_view(), name='dizimista-detail'),
+    path('api/aniversariantes/', AniversariantesAPIView.as_view(), name='aniversariantes-dizimistas'),
     path('api/novos-dizimistas/', NovoDizimistaAPIView.as_view(), name='novos-dizimistas'),
-    path('api/novos-dizimistas/<int:pk>/', NovoDizimistaAPIView().as_view(), name='novo_dizimista-detail'),
+    path('api/novos-dizimistas/<int:pk>/', NovoDizimistaAPIView.as_view(), name='novo_dizimista-detail'),
     path('api/novos-dizimistas/transferir-novo-dizimista/<int:pk>/', TransferirDizimistaAPIView.as_view(), name='transformar-dizimista'),
+    path('api/novos-aniversariantes/', NovosAniversariantesAPIView.as_view(), name='aniversariantes-novos-dizimistas'),
     path('api/paroquias/', ParoquiaAPIView.as_view(), name='paroquias'),
     path('api/paroquias/<int:pk>/', ParoquiaAPIView.as_view(), name='paroquias-detail'),
 ]
