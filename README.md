@@ -23,15 +23,15 @@
 Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 
-`**Front-End**`
+`Front-End`
 - HTML, CSS e Sass
 - JavaScript e Vue.js
 
-`**Back-End**`
+`Back-End`
 - Django (Backend)
 - Django REST Framework
 
-`**Ambiente e Ferramentas**`
+`Ambiente e Ferramentas`
 - Husky
 - MySQL
 - Docker
@@ -43,7 +43,7 @@ O "Projeto Dizimista" é uma plataforma web para gestão de dizimistas e novos d
 
 <br>
 
-`•	Módulo 1:` Listagem dos Aniversariantes para Impressão
+`Módulo 1:` Listagem dos Aniversariantes para Impressão
 Este módulo foca na coleta, organização e apresentação dos dados de aniversariantes, com opção de exportação para impressão.
 
 **Funcionalidades:**
@@ -61,7 +61,7 @@ Este módulo foca na coleta, organização e apresentação dos dados de anivers
 <br>
 <br>
 
-`•	Módulo 2:` Mensagens ou E-mails de Parabenização Automáticos
+`Módulo 2:` Mensagens ou E-mails de Parabenização Automáticos
 Este módulo se concentra na comunicação direta com os aniversariantes.
 
 **Funcionalidades:**
