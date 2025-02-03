@@ -7,7 +7,6 @@ from dizimistas.models import Dizimista
 from .serializers import NovoDizimistaSerializer
 from django.db import transaction
 from paroquia.serializers import ParoquiaSerializer
-from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 
@@ -48,7 +47,7 @@ class NovoDizimistaAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def put(self, request, pk):
         novo_dizimista = self.get_object(pk)
         serializer = NovoDizimistaSerializer(novo_dizimista, data=request.data)

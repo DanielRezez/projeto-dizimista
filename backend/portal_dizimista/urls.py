@@ -17,13 +17,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from dizimistas.views import DizimistaAPIView, AniversariantesAPIView
 from novos_dizimistas.views import NovoDizimistaAPIView, TransferirDizimistaAPIView, NovosAniversariantesAPIView
 from paroquia.views import ParoquiaAPIView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # JWT Authentication
+    path('api/auth/', include('dj_rest_auth.urls')),  # Login, Logout, Password Reset
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # Registration & Email Verification
+    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login (obtenção de tokens)
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Refresh token
+    
+    # API endpoints
     path('api/dizimistas/', DizimistaAPIView.as_view(), name='dizimistas'),
     path('api/dizimistas/<int:pk>/', DizimistaAPIView.as_view(), name='dizimista-detail'),
     path('api/aniversariantes/', AniversariantesAPIView.as_view(), name='aniversariantes-dizimistas'),

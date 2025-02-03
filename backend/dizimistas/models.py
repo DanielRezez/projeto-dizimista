@@ -8,6 +8,7 @@ from paroquia.models import Paroquia
 # Create your models here.
 class Dizimista(models.Model):
     id_paroquia = models.ForeignKey(Paroquia, null=True, blank=False, on_delete=models.CASCADE, db_column='id_paroquia')
+    sistema = models.IntegerField(null=True)
     ficha = models.IntegerField()
     nome = models.CharField(max_length=255)
     data_nascimento = models.DateField()
@@ -25,10 +26,6 @@ class Dizimista(models.Model):
     #Define metadados, restrições e modos de funcionamento
     class Meta:
         db_table = 'tb_dizimistas'
-        permissions = [
-            ('can_view_dizimista', 'Can view dizimista'),
-            ('can_edit_dizimista', 'Can edit dizimista'),
-        ]
         
     def clean(self):
         #Validação customizada para garantir que não existam dizimistas com ficha duplicadas

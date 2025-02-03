@@ -6,6 +6,7 @@ from paroquia.models import Paroquia
 # Create your models here.
 class NovoDizimista(models.Model):
     id_paroquia = models.ForeignKey(Paroquia, null=True, on_delete=models.CASCADE, db_column='id_paroquia')
+    sistema = models.IntegerField(null=True)
     ficha = models.IntegerField()
     nome = models.CharField(max_length=255)
     data_nascimento = models.DateField()
@@ -20,11 +21,7 @@ class NovoDizimista(models.Model):
     
     class Meta:
         db_table = 'tb_novos_dizimistas'
-        permissions = [
-            ('can_view_novoDizimista', 'Can view novo dizimista'),
-            ('can_edit_novoDizimista', 'Can edit novo dizimista'),
-        ]
-    
+
     def clean(self):
         if NovoDizimista.objects.filter(id_paroquia=self.id_paroquia, ficha=self.ficha, situacao='A').exclude(pk=self.pk).exists():
             raise ValidationError('Já existe um dizimista com esse número nesta paróquia')

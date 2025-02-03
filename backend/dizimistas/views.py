@@ -6,9 +6,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Dizimista
 from .serializers import DizimistaSerializer
-from novos_dizimistas.models import NovoDizimista
-from novos_dizimistas.serializers import NovoDizimistaSerializer
 from django.db.models import Q
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
