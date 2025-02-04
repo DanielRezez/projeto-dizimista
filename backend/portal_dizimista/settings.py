@@ -191,8 +191,11 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 SITE_ID = 1
 
 REST_AUTH_REGISTER_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'usuario.Serializers.CustomLoginSerializer',
-    'REGISTER_SERIALIZER': 'dj_rest_auth.registration.serializers.RegisterSerializer',
+    'REGISTER_SERIALIZER': 'usuario.serializers.CustomRegisterSerializer',
+}
+
+REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER': 'usuario.serializers.CustomLoginSerializer',
 }
 
 # Disable social authentication

@@ -1,16 +1,25 @@
-from rest_framework.serializers import ModelSerializer
-from dj_rest_auth.serializers import LoginSerializer
+from dj_rest_auth.serializers import LoginSerializer, RegisterSerializer
 from rest_framework import serializers
 from .models import User
 from paroquia.models import Paroquia
 
-class UserSerializer(ModelSerializer):
-    id_paroquia = serializers.PrimaryKeyRelatedField(queryset=Paroquia.objects.all())
-        
+class UserSerializer(serializers.ModelSerializer):
+    id_paroquia = serializers.PrimaryKeyRelatedField(queryset=Paroquia.objects.all(), required=True)
+
     class Meta:
         model = User
-        fields = 'username, email, id_paroquia'
+        fields = ['id', 'email', 'username', 'id_paroquia', 'is_active']
+
+class CustomRegisterSerializer(RegisterSerializer):
+    id_paroquia = serializers.PrimaryKeyRelatedField(queryset=Paroquia.objects.all(), required=True)
+
+    def save(self, request):
+        user = super().save(request)
+        user.id_paroquia = self.validated_data.get('id_paroquia')
+        user.save()
         
+        return user
+                
 class CustomLoginSerializer(LoginSerializer):
     def validate(self, attrs):
         email = attrs.get('username')
@@ -22,7 +31,7 @@ class CustomLoginSerializer(LoginSerializer):
             raise serializers.ValidationError("Usuário não encontrado")
         
         else:
-            if not user_check_password(password):
+            if not user.check_password(password):
                 raise serializers.ValidationError("Senha incorreta")
             
             if not user.is_active:
