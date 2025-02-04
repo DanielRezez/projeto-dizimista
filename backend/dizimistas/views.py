@@ -3,17 +3,20 @@
 from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Dizimista
 from .serializers import DizimistaSerializer
 from django.db.models import Q
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+
 
 # Create your views here.
 
 class DizimistaAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request, pk=None):
         if pk:
             try:
@@ -62,6 +65,9 @@ class DizimistaAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class AniversariantesAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         data_inicio = request.GET.get('data_inicio', None)
         data_fim = request.GET.get('data_fim', None)

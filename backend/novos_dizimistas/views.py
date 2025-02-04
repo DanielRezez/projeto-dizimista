@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .models import NovoDizimista
 from dizimistas.models import Dizimista
 from .serializers import NovoDizimistaSerializer
@@ -11,6 +13,9 @@ from paroquia.serializers import ParoquiaSerializer
 # Create your views here.
 
 class NovoDizimistaAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request, pk=None):
         if pk:
             try:
@@ -59,6 +64,9 @@ class NovoDizimistaAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class TransferirDizimistaAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request, pk):
         #Busca o novo dizimista
         novo_dizimista=get_object_or_404(NovoDizimista, pk=pk)
@@ -114,6 +122,9 @@ class TransferirDizimistaAPIView(APIView):
             )
             
 class NovosAniversariantesAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request):
         data_inicio = request.GET.get('data_inicio', None)
         data_fim = request.GET.get('data_fim', None)
