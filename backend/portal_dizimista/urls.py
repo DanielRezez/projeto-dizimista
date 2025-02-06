@@ -23,6 +23,7 @@ from django.urls import path, include
 # para tokens JWT
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
+# Views from apps
 from usuario.views import register_user
 from dizimistas.views import DizimistaAPIView, AniversariantesAPIView
 from novos_dizimistas.views import NovoDizimistaAPIView, TransferirDizimistaAPIView, NovosAniversariantesAPIView
@@ -31,11 +32,13 @@ from paroquia.views import ParoquiaAPIView
 urlpatterns = [
     path('admin/', admin.site.urls),
     
+    # For registering users
+    path('register_user/', register_user, name='register_user'),
+    
     # JWT Authentication
     path('api/auth/', include('dj_rest_auth.urls')),  # Login, Logout, Password Reset
-    path('register_user/', register_user, name='register_user') ,
-    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login (obtenção de tokens)
-    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Refresh token
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Login (obtenção de tokens)
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Refresh token
     
     # API endpoints
     path('api/dizimistas/', DizimistaAPIView.as_view(), name='dizimistas'),
