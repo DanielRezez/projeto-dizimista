@@ -11,7 +11,7 @@ function Gestao_dizimistas() {
                 </div>
 
                 {/* Section centralizada */}
-                <section className="w-full max-w-[1280px] min-h-[60%] h-auto bg-gradient-to-t from-[#EDE8DD] to-[#FFFFFF] shadow-lg rounded-lg p-5">
+                <section className="w-full max-w-[1280px] min-h-[60%] h-auto bg-gradient-to-t from-[#EDE8DD] to-[#FFFFFF] shadow-sm rounded-lg p-5">
                     <div className=" overflow-x-auto">
                         <Tabela_dizimistas />
                     </div>

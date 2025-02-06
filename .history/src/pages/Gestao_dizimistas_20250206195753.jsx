@@ -7,7 +7,10 @@ function Gestao_dizimistas() {
             <div className="flex flex-col items-center justify-start min-h-screen w-full px-4">
                 <div className="w-full max-w-[1280px] mb-4">
                     <input 
-                        type="text" placeholder="Buscar..." className="w-full max-w-[400px] bg-white px-4 py-2 border border-[#9D988D] rounded-md shadow-md" />
+                        type="text" 
+                        placeholder="Buscar..." 
+                        className="w-full max-w-[400px] px-4 py-2 border border-gray-300 rounded-md"
+                    />
                 </div>
 
                 {/* Section centralizada */}
