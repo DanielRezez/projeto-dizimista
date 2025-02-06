@@ -1,13 +1,15 @@
-'''
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ModelViewSet
+from usuario.Serializers import UserSerializer
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import api_view
 
-from core.api.serializers import UserSerializer
-from core.models import User 
-
-# Create your views here.
-class UserModelViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
-'''
+@api_view(["POST"])
+def register_user(request):
+    serializer = UserSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        
+        return Response(serializer.data)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

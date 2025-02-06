@@ -158,8 +158,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configure the JWTs to expire after 1 hour, and allow users to refresh near-expiration tokens
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -189,14 +189,6 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # This is required for the django.contrib.sites dependency
 SITE_ID = 1
-
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'usuario.serializers.CustomRegisterSerializer',
-}
-
-REST_AUTH_SERIALIZERS = {
-    'LOGIN_SERIALIZER': 'usuario.serializers.CustomLoginSerializer',
-}
 
 # Disable social authentication
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
