@@ -1,10 +1,11 @@
 import Tabela_aniversariantes from "../components/Tabela_aniversariantes";
 import Layout from "../layouts/Layout";
-import Breadcrumbs from "../components/Breadcrumbs";
+import Breadcrumbs from "../components/Breadcrumbs"
 
 function Pagina_inicial() {
     return (
         <Layout>
+            <Breadcrumbs />
             <div className="flex justify-center w-full">
                 <section className="max-w-[90%] px-5 my-[115px] w-[1280px] h-[720px] bg-gradient-to-t from-[#EDE8DD] to-[#FFFFFF]">
                     <h1 className="text-[#C9942B] text-center text-[4rem] font-[Tangerine] mt-[30px]">Aniversariantes</h1>

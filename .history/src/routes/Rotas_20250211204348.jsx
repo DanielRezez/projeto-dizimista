@@ -12,7 +12,7 @@ const Rotas = () => {
                 <Route path="/" element={<Login />}></Route>
                 <Route path="/pagina-inicial" element={<Pagina_inicial />}></Route>
                 <Route path="/gestao-dizimistas" element={<Gestao_dizimistas />}></Route>
-                <Route path="/perfil" element={<Perfil />}></Route>
+                <Route path="/perfil" element={<Perfil />}</Route>
             </Routes>
         </Router>
     );

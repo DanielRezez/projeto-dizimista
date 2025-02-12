@@ -16,9 +16,7 @@ function Header() {
                     </Link>
                     <img className="hidden md:block md:text-center" src="./src/assets/cruz.svg" />
                     <Link to="/gestao-dizimistas" className="hidden md:block md:text-center">GESTÃO DE DIZIMISTAS</Link>
-                    <Link to="/perfil">
-                        <img className="md:hidden" src="./src/assets/perfil.svg" />
-                    </Link>
+                    <img className="md:hidden" src="./src/assets/perfil.svg" />
                     <img className="hidden md:block md:text-center" src="./src/assets/cruz.svg" />
                     <Link to="/perfil" className="hidden md:block md:text-center">PERFIL</Link>
                 </nav>

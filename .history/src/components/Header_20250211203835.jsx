@@ -11,14 +11,10 @@ function Header() {
                 <img className="w-40 h-40 relative top-14" src="./src/assets/Logo.png" />
                 <nav className="flex items-center gap-10 text-white font-bold md:gap-4">
                     <Link to="/pagina-inicial" className="hidden md:block md:text-center">PÁGINA INICIAL</Link>
-                    <Link to="/gestao-dizimistas" className="">
-                        <img className="md:hidden" src="./src/assets/gestão.svg" />
-                    </Link>
+                    <img className="md:hidden" src="./src/assets/gestão.svg" />
                     <img className="hidden md:block md:text-center" src="./src/assets/cruz.svg" />
                     <Link to="/gestao-dizimistas" className="hidden md:block md:text-center">GESTÃO DE DIZIMISTAS</Link>
-                    <Link to="/perfil">
-                        <img className="md:hidden" src="./src/assets/perfil.svg" />
-                    </Link>
+                    <img className="md:hidden" src="./src/assets/perfil.svg" />
                     <img className="hidden md:block md:text-center" src="./src/assets/cruz.svg" />
                     <Link to="/perfil" className="hidden md:block md:text-center">PERFIL</Link>
                 </nav>
