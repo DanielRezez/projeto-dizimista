@@ -16,9 +16,9 @@ function Perfil() {
 
     return (
         <Layout>
-            <section className="w-full max-w-[90%] rounded-md mx-auto flex flex-col relative p-20 bg-[#9D988D] mt-10 mb-30">
+            <section className="w-full max-w-[90%] mx-auto flex flex-col relative p-20 bg-[#9D988D] mt-10 mb-30">
                 {/* Avatar redondo e clicável */}
-                <div className="absolute -top-15 left-1/2 -translate-x-1/2 w-[120px] h-[120px] bg-white border-[#F2EDE2] border-10 rounded-full overflow-hidden cursor-pointer sm:-top-30 sm:w-[180px] sm:h-[180px]  md:w-[260px] md:h-[260px]">
+                <div className="absolute -top-15 left-1/2 -translate-x-1/2 w-[120px] h-[120px] bg-white rounded-full overflow-hidden cursor-pointer sm:-top-30 sm:w-[180px] sm:h-[180px]  md:w-[260px] md:h-[260px]">
                     <input 
                         type="file" 
                         accept="image/*" 
@@ -27,6 +27,7 @@ function Perfil() {
                         onChange={handleImageChange}
                     />
                     <label htmlFor="fileInput" className="w-full h-full flex items-center justify-center">
+                        <img src={imagem} className="w-full h-full object-cover" />
                     </label>
                 </div>
 

@@ -1,5 +1,6 @@
 import Tabela_aniversariantes from "../components/Tabela_aniversariantes";
 import Layout from "../layouts/Layout";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 function Pagina_inicial() {
     return (
