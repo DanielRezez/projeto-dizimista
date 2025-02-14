@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
 function Header() {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        navigate("/");
+
+    }
+
     return(
         <>
             <header className="flex items-center justify-around bg-[#A10013] w-full h-[100px] fixed px-4">
@@ -17,6 +27,7 @@ function Header() {
                     <img className="md:hidden" src="./src/assets/perfil.svg" />
                     <img className="hidden md:block md:text-center" src="./src/assets/cruz.svg" />
                     <Link to="/perfil" className="hidden md:block md:text-center">PERFIL</Link>
+                    <button onClick={handleLogout} classname="bg-red-500 px-4 py-2 rounded">Sair</button>
                 </nav>
             </header>
         </>

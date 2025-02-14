@@ -1,4 +1,35 @@
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"
+
 function Login() {
+    const [username, setUsuario] = useState("");
+    const [password, setSenha] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError("");
+
+        try {
+            const response = await axios.post("http://localhost:8000/token/", {
+                username,
+                password
+            });
+
+            const { access, refresh } = response.data;
+
+            localStorage.setItem("access_token", access);
+            localStorage.setItem("refresh_token", refresh);
+
+            navigate("/pagina-inicial");
+
+        } catch (error) {
+            setError("Usuário ou senha inválido");
+        }
+    };
+
     return (
         <>
             <section className="@container bg-[url('src/assets/Background-login.jpg')] bg-cover h-full min-h-screen flex flex-col items-center justify-start font-[Montserrat] md:items-center md:justify-center md:bg-contain md:flex-row">
@@ -17,11 +48,12 @@ function Login() {
 
                 <section className="flex flex-col items-center gap-5 bg-black/35 rounded-[15px] pt-[105px] mt-10 md:h-[728px] md:w-[480px] md:mr-[111px]">
                     <h2 className="text-white text-[2.375rem] font-bold">LOGIN</h2>
+                    {error && <p className="text-red-500">{error}</p>}
                     <div className="h-[1px] max-w-4/5 w-[300px] bg-[#FCFEFF]/50 mb-5"></div>
-                    <input type="text" className="max-w-4/5 w-[300px] bg-transparent rounded-sm border-1 placeholder:text-[#959595] text-white text-[0.75rem] px-3 py-2 border-white border-b-1 duration-300 ease focus:outline-none focus:bg-white focus:text-black focus:text-[16px] focus:border-white focus:border-1 focus:rounded-sm focus:w-3/5 focus:shadow" placeholder="Digite seu usuário..." />
-                    <input type="password" className="max-w-4/5 w-[300px] bg-transparent rounded-sm border-1 placeholder:text-[#959595] text-white text-[0.75rem] px-3 py-2 border-white border-b-1 duration-300 ease focus:outline-none focus:bg-white focus:text-black focus:text-[16px] focus:border-white focus:border-1 focus:rounded-sm focus:w-3/5 focus:shadow" placeholder="Digite sua senha..." />
+                    <input type="text" value={username} onChange={(e) => setUsuario(e.target.value)} className="max-w-4/5 w-[300px] bg-transparent rounded-sm border-1 placeholder:text-[#959595] text-white text-[0.75rem] px-3 py-2 border-white border-b-1 duration-300 ease focus:outline-none focus:bg-white focus:text-black focus:text-[16px] focus:border-white focus:border-1 focus:rounded-sm focus:w-3/5 focus:shadow" placeholder="Digite seu usuário..." />
+                    <input type="password" value={password} onChange={(e) => setSenha(e.target.value)} className="max-w-4/5 w-[300px] bg-transparent rounded-sm border-1 placeholder:text-[#959595] text-white text-[0.75rem] px-3 py-2 border-white border-b-1 duration-300 ease focus:outline-none focus:bg-white focus:text-black focus:text-[16px] focus:border-white focus:border-1 focus:rounded-sm focus:w-3/5 focus:shadow" placeholder="Digite sua senha..." />
                     <p className="my-[12px] text-white text-[0.75rem] font-light hover:underline hover:cursor-pointer">Esqueceu a senha?</p>
-                    <button type="submit" className="flex items-center justify-center w-[130px] h-[30px] rounded-sm bg-[#27AE60] mb-[30px] hover:cursor-pointer"><img src="./src/assets/confirm.svg" /></button>
+                    <button type="submit" onClick={ handleLogin } className="flex items-center justify-center w-[130px] h-[30px] rounded-sm bg-[#27AE60] mb-[30px] hover:cursor-pointer"><img src="./src/assets/confirm.svg" /></button>
                 </section>
             </section>
 
