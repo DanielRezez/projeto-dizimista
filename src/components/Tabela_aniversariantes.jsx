@@ -1,10 +1,5 @@
-function Tabela_aniversariantes() {
-    const aniversariantes = [
-        { nome: "João Damasceno", data: "03/01" },
-        { nome: "Maria de Souza", data: "07/01" },
-        { nome: "Beatriz Monteiro", data: "09/01" },
-        { nome: "Pedro Henrique", data: "14/01" },
-    ];
+function Tabela_aniversariantes({ dados }) {
+    console.log("Dados recebidos para a tabela:", dados);
 
     return (
         <>
@@ -16,12 +11,19 @@ function Tabela_aniversariantes() {
                     </tr>
                 </thead>
                 <tbody>
-                    {aniversariantes.map((pessoa, index) => (
-                        <tr key={index} className={`${index % 2 === 0 ? "bg-[#EDDBB8]" : "bg-white"} border-b border-[#A10013]`}>
-                            <td className="px-4 py-2 text-center font-bold">{pessoa.nome}</td>
-                            <td className="px-4 py-2 text-center">{pessoa.data}</td>
+                    {dados.aniversariantes && dados.aniversariantes.length > 0 ? (
+                        dados.aniversariantes.map((aniversariante, index) => (
+                            <tr key={ index } className={`${index % 2 === 0 ? "bg-[#EDDBB8]" : "bg-white"} border-b border-[#A10013]`}>
+                                <td className="px-4 py-2 text-center font-bold">{aniversariante.nome}</td>
+                                <td className="px-4 py-2 text-center">{aniversariante.data_nascimento}</td>
+                            </tr>
+                        ))
+                    
+                    ) : (
+                        <tr>
+                            <td colSpan="3" className="px-4 py-2 text-center font-bold">Nenhum aniversariante encontrado.</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
         </>

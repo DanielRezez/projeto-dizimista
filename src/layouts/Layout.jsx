@@ -2,7 +2,7 @@
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Breadcrumbs from "../components/Breadcrumb";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 // Declaração do componente Layout
 function Layout({ children }) { // O parâmetro { children } permite que qualquer conteúdo dentro desse Layout seja renderizado onde o { children } estiver
