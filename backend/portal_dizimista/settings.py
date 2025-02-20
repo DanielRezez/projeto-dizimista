@@ -27,6 +27,9 @@ SECRET_KEY = 'django-insecure-6qwh3r-p8xthart5js#^$w5p*0ry!bd00^a^6pkv8a5j69d#!6
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # URL do front-end
+]
 
 
 # Application definition
@@ -57,8 +60,8 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'allauth',
     'allauth.account',
-    'allauth.socialaccount' # Required but not used
-
+    'allauth.socialaccount', # Required but not used
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -69,7 +72,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'portal_dizimista.urls'

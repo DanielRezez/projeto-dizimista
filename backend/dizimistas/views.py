@@ -71,6 +71,7 @@ class AniversariantesAPIView(APIView):
     def get(self, request):
         data_inicio = request.GET.get('data_inicio', None)
         data_fim = request.GET.get('data_fim', None)
+        id_paroquia = request.GET.get('id_paroquia', None)
         
         if data_inicio and data_fim:
             try:
@@ -86,10 +87,10 @@ class AniversariantesAPIView(APIView):
             
             aniversariantes = Dizimista.objects.filter(
                 Q(data_nascimento__month__gte=data_inicio.month, data_nascimento__day__gte=data_inicio.day) &
-                Q(data_nascimento__month__lte=data_fim.month, data_nascimento__day__lte=data_fim.day))
+                Q(data_nascimento__month__lte=data_fim.month, data_nascimento__day__lte=data_fim.day) & Q(id_paroquia=id_paroquia))
         
         else:
-            aniversariantes = Dizimista.objects.filter(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day)
+            aniversariantes = Dizimista.objects.filter(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day, id_paroquia=id_paroquia)
         
         aniversariantes_serializer = DizimistaSerializer(aniversariantes, many=True)
         

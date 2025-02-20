@@ -9,6 +9,8 @@ from dizimistas.models import Dizimista
 from .serializers import NovoDizimistaSerializer
 from django.db import transaction
 from paroquia.serializers import ParoquiaSerializer
+from datetime import datetime
+from django.db.models import Q
 
 # Create your views here.
 
@@ -128,6 +130,7 @@ class NovosAniversariantesAPIView(APIView):
     def get(self, request):
         data_inicio = request.GET.get('data_inicio', None)
         data_fim = request.GET.get('data_fim', None)
+        id_paroquia = request.GET.get('id_paroquia', None)
         
         if data_inicio and data_fim:
             try:
@@ -143,10 +146,10 @@ class NovosAniversariantesAPIView(APIView):
             
             aniversariantes = NovoDizimista.objects.filter(
                 Q(data_nascimento__month__gte=data_inicio.month, data_nascimento__day__gte=data_inicio.day) &
-                Q(data_nascimento__month__lte=data_fim.month, data_nascimento__day__lte=data_fim.day))
+                Q(data_nascimento__month__lte=data_fim.month, data_nascimento__day__lte=data_fim.day) & Q(id_paroquia=id_paroquia))
         
         else:
-            aniversariantes = NovoDizimista.objects.filter(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day)
+            aniversariantes = NovoDizimista.objects.filter(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day, id_paroquia=id_paroquia)
         
         aniversariantes_serializer = NovoDizimistaSerializer(aniversariantes, many=True)
         
