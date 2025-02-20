@@ -6,7 +6,7 @@ const Breadcrumbs = () => {
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   return (
-    <nav className="ml-[5%] max-full mb-10 text-gray-600 text-sm">
+    <nav className="print:hidden ml-[5%] max-full mb-10 text-gray-600 text-sm">
       <ul className="flex space-x-2">
         {/* Se o usuário não estiver na página inicial, mostramos "Home" */}
         {pathnames[0] !== "pagina-inicial" && (
