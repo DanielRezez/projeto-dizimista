@@ -4,7 +4,7 @@ function Header() {
 
     return(
         <>
-            <header className="flex items-center justify-around bg-[#A10013] w-full h-[100px] fixed px-4">
+            <header className="flex items-center justify-around bg-[#A10013] w-full h-[100px] fixed px-4 z-2">
                 <Link to="/pagina-inicial" className="flex items-center gap-2">
                     <img className="md:pb-6.5" src="/src/assets/church.svg"></img>
                     <h3 className="hidden lg:block lg:text-center text-white font-bold">PARÓQUIA MATRIZ SANTO ANTÔNIO DE PÁDUA</h3>

@@ -11,13 +11,18 @@ function Tabela_aniversariantes({ dados }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {dados.aniversariantes && dados.aniversariantes.length > 0 ? (
-                        dados.aniversariantes.map((aniversariante, index) => (
-                            <tr key={ index } className={`${index % 2 === 0 ? "bg-[#EDDBB8]" : "bg-white"} border-b border-[#A10013]`}>
-                                <td className="px-4 py-2 text-center font-bold">{aniversariante.nome}</td>
-                                <td className="px-4 py-2 text-center">{aniversariante.data_nascimento}</td>
-                            </tr>
-                        ))
+                    {dados.aniversariantes && dados.novos_aniversariantes ? (
+                        [...dados.aniversariantes, ...dados.novos_aniversariantes].map((aniversariante, index) => {
+                            const [ano, mes, dia] = aniversariante.data_nascimento.split("-");
+                            const dataFormatada = `${ dia }/${ mes }`;
+                    
+                            return (
+                                <tr key={ index } className={`${ index % 2 === 0 ? "bg-[#EDDBB8]" : "bg-white"} border-b border-[#A10013]`}>
+                                    <td className="px-4 py-2 text-center font-bold">{ aniversariante.nome }</td>
+                                    <td className="px-4 py-2 text-center">{ dataFormatada }</td>
+                                </tr>
+                            );
+                        })
                     
                     ) : (
                         <tr>

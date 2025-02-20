@@ -13,17 +13,37 @@ function Pagina_inicial() {
 
     const fetchAniversariantes = async () => {
         try {
-            const response = await api.get("/aniversariantes/", {
+            const responseAniversariantes = await api.get("/aniversariantes/", {
                 params: {
                     data_inicio: startDate,
                     data_fim: endDate,
                     id_paroquia: comunidade
                 }
             });
-            console.log("✅ Resposta da API:", response);
-            console.log("📊 Dados recebidos:", response.data);
 
-            setAniversariantes(response.data);
+            const responseNovosAniversariantes = await api.get("/novos-aniversariantes/", {
+                params: {
+                    data_inicio: startDate,
+                    data_fim: endDate,
+                    id_paroquia: comunidade
+                }
+        
+            });
+
+            console.log("✅ Aniversariantes:", responseAniversariantes.data);
+            console.log("✅ Novos Dizimistas Aniversariantes:", responseNovosAniversariantes.data);
+            console.log("Comunidade: ", comunidade);
+
+            const dadosCombinados = {
+                aniversariantes: responseAniversariantes.data.aniversariantes || [],
+                novos_aniversariantes: responseNovosAniversariantes.data.aniversariantes || []
+
+            };
+
+            console.log("📊 Dados combinados: ", dadosCombinados);
+
+            setAniversariantes(dadosCombinados);
+
         } catch (error) {
             console.error("Erro ao buscar dizimistas: ", error);
         
@@ -51,8 +71,8 @@ function Pagina_inicial() {
 
     return (
         <Layout>
-            <div className="flex justify-center w-full">
-                <section className="max-w-[90%] px-30 my-[115px] w-[1280px] h-[720px] rounded-sm shadow-[4px_4px_4px_rgba(0,0,0,0.25)] bg-gradient-to-t from-[#EDE8DD] to-[#FFFFFF]">
+            <div className="flex justify-center w-full -mt-[80px]">
+                <section className="max-w-[90%] px-30 my-[115px] w-[1280px] min-h-[720px] h-auto rounded-sm shadow-[4px_4px_4px_rgba(0,0,0,0.25)] bg-gradient-to-t from-[#EDE8DD] to-[#FFFFFF]">
                     <h1 className="text-[#C9942B] text-center text-[4rem] font-[Tangerine] mt-[30px]">Aniversariantes</h1>
 
                     {/* Filtros */}
