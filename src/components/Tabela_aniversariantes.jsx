@@ -26,7 +26,7 @@ function Tabela_aniversariantes({ dados }) {
                     
                     ) : (
                         <tr>
-                            <td colSpan="3" className="px-4 py-2 text-center font-bold">Nenhum aniversariante encontrado.</td>
+                            <td colSpan="3" className="px-4 py-5 text-center font-bold">Nenhum aniversariante encontrado.</td>
                         </tr>
                     )}
                 </tbody>
