@@ -29,7 +29,7 @@ class DizimistaAPIView(APIView):
                 return Response({"error": "Dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
             
         else:
-            situacao = request.GET.get('situacao', None)
+            situacao = request.GET.get('status', None)
             id_paroquia = request.GET.get('id_paroquia', None)
             
             dizimistas = Dizimista.objects.all()
@@ -87,10 +87,10 @@ class AniversariantesAPIView(APIView):
             
             aniversariantes = Dizimista.objects.filter(
                 Q(data_nascimento__month__gte=data_inicio.month, data_nascimento__day__gte=data_inicio.day) &
-                Q(data_nascimento__month__lte=data_fim.month, data_nascimento__day__lte=data_fim.day) & Q(id_paroquia=id_paroquia))
+                Q(data_nascimento__month__lte=data_fim.month, data_nascimento__day__lte=data_fim.day) & Q(id_paroquia=id_paroquia) & Q(situacao="A"))
         
         else:
-            aniversariantes = Dizimista.objects.filter(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day, id_paroquia=id_paroquia)
+            aniversariantes = Dizimista.objects.filter(data_nascimento__month=data_inicio.month, data_nascimento__day=data_inicio.day, id_paroquia=id_paroquia, situacao="A")
         
         aniversariantes_serializer = DizimistaSerializer(aniversariantes, many=True)
         
