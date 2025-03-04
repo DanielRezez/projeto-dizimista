@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"
+import api from "../services/api"
 
 function Login() {
     const [username, setUsuario] = useState("");
@@ -52,8 +53,8 @@ function Login() {
                     <div className="h-[1px] max-w-4/5 w-[300px] bg-[#FCFEFF]/50 mb-5"></div>
                     <input type="text" value={username} onChange={(e) => setUsuario(e.target.value)} className="max-w-4/5 w-[300px] bg-transparent rounded-sm border-1 placeholder:text-[#959595] text-white text-[0.75rem] px-3 py-2 border-white border-b-1 duration-300 ease focus:outline-none focus:bg-white focus:text-black focus:text-[16px] focus:border-white focus:border-1 focus:rounded-sm focus:w-3/5 focus:shadow" placeholder="Digite seu usuário..." />
                     <input type="password" value={password} onChange={(e) => setSenha(e.target.value)} className="max-w-4/5 w-[300px] bg-transparent rounded-sm border-1 placeholder:text-[#959595] text-white text-[0.75rem] px-3 py-2 border-white border-b-1 duration-300 ease focus:outline-none focus:bg-white focus:text-black focus:text-[16px] focus:border-white focus:border-1 focus:rounded-sm focus:w-3/5 focus:shadow" placeholder="Digite sua senha..." />
-                    <p className="my-[12px] text-white text-[0.75rem] font-light hover:underline hover:cursor-pointer">Esqueceu a senha?</p>
-                    <button type="submit" onClick={ handleLogin } className="flex items-center justify-center w-[130px] h-[30px] rounded-sm bg-[#27AE60] mb-[30px] hover:cursor-pointer"><img src="./src/assets/confirm.svg" /></button>
+                    <p title="Recurso indisponível no momento" className="my-[12px] text-white text-[0.75rem] font-light hover:opacity-50 hover:underline cursor-not-allowed">Esqueceu a senha?</p>
+                    <button type="submit" onClick={ handleLogin } className="flex items-center justify-center w-[130px] h-[30px] rounded-sm bg-[#27AE60] mb-[30px] hover:cursor-pointer hover:bg-[#166536] transition duration-150 ease-in-out py-5"><img src="./src/assets/confirm.svg" /></button>
                 </section>
             </section>
 

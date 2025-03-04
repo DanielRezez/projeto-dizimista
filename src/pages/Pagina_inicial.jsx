@@ -2,7 +2,7 @@ import Tabela_aniversariantes from "../components/Tabela_aniversariantes";
 import Layout from "../layouts/Layout";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import api from "../services/api"
+import api from "../services/api";
 
 function Pagina_inicial() {
     const [startDate, setStartDate] = useState("");

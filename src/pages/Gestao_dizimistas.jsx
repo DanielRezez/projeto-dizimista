@@ -10,7 +10,7 @@ function Gestao_dizimistas() {
     const [novosDizimistas, setNovosDizimistas]= useState([]);
     const [comunidade, setComunidade] = useState("");
     const [paroquias, setParoquias] = useState([]);
-    const [termoBusca, setTermoBusca] = useState(1);
+    const [termoBusca, setTermoBusca] = useState("");
     const [situacaoFiltro, setSituacaoFiltro] = useState("");
 
     const itensPorPagina = 12;
@@ -92,7 +92,7 @@ function Gestao_dizimistas() {
                     </select>
                     <select name="filtro-situacao" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-amber-400 focus:border-amber-400 block w-full p-2.5 max-w-60" value={situacaoFiltro} onChange={(e) => setSituacaoFiltro(e.target.value)}>
                         <option value="">Todos os dizimistas</option>
-                        <option value="A">Dizimistas ativos</option>
+                        <option value="A">Dizimistas Ativos</option>
                         <option value="I">Dizimistas Inativos</option>
                     </select>
                 </div>
@@ -104,7 +104,7 @@ function Gestao_dizimistas() {
                     <div className="-mt-15 -ml-5 flex gap-2 font-bold w-full min-w-[115%] ">
                         <button
                             onClick={() => setCategoriaAtiva("dizimistas")}
-                            className={`px-6 py-2 rounded-t-md transition-all ${
+                            className={`px-6 py-2 rounded-t-md transition duration-200 cursor-pointer ${
                                 categoriaAtiva === "dizimistas"
                                     ? "bg-[#fff] text-[#C9942B]"
                                     : "bg-[#C8C8C8] text-[#71717A]"
@@ -114,7 +114,7 @@ function Gestao_dizimistas() {
                         </button>
                         <button
                             onClick={() => setCategoriaAtiva("novos_dizimistas")}
-                            className={`px-6 py-2 rounded-t-md transition-all ${
+                            className={`px-6 py-2 rounded-t-md transition duration-200 cursor-pointer ${
                                 categoriaAtiva === "novos_dizimistas"
                                     ? "bg-[#fff] text-[#C9942B]"
                                     : "bg-[#C8C8C8] text-[#71717A]"
