@@ -28,12 +28,15 @@ from usuario.views import register_user
 from dizimistas.views import DizimistaAPIView, AniversariantesAPIView
 from novos_dizimistas.views import NovoDizimistaAPIView, TransferirDizimistaAPIView, NovosAniversariantesAPIView
 from paroquia.views import ParoquiaAPIView
+from usuario.views import get_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     # For registering users
     path('register_user/', register_user, name='register_user'),
+    
+    path('me/', get_user, name="obter-usuario"),
     
     # JWT Authentication
     path('api/auth/', include('dj_rest_auth.urls')),  # Login, Logout, Password Reset

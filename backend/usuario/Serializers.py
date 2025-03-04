@@ -4,7 +4,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['id', 'email', 'username', 'id_paroquia', 'is_active', 'password']
+        fields = ['id', 'email', 'username', 'id_paroquia', 'is_active', 'password', 'first_name']
         extra_kwars = {'write_only': True}          
     
     def create(self, validate_data):
@@ -12,9 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
         username = validate_data["username"]
         password = validate_data["password"]
         paroquia = validate_data["id_paroquia"]
+        first_name= validate_data["first_name"]
         
         user = get_user_model()
-        new_user = user.objects.create(email=email, username=username, id_paroquia=paroquia)
+        new_user = user.objects.create(email=email, username=username, id_paroquia=paroquia, first_name=first_name)
         new_user.set_password(password)
         new_user.save()
         

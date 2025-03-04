@@ -65,6 +65,16 @@ class NovoDizimistaAPIView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    def delete(self, request, pk):
+        try:
+            novo_dizimista=Dizimista.objects.get(pk=pk)
+            novo_dizimista.delete()
+            
+            return Response({"message": "Novo dizimista deletado com sucesso!"}, status=status.HTTP_204_NO_CONTENT)
+
+        except Dizimista.DoesNotExist:
+            return Response({"message": "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
+    
 class TransferirDizimistaAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
