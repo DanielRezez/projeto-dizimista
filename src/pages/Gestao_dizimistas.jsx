@@ -15,6 +15,7 @@ function Gestao_dizimistas() {
 
     const itensPorPagina = 12;
 
+
     // Calcula o número total de páginas dinamicamente
     const totalItens = categoriaAtiva === "dizimistas" ? dizimistas.length : novosDizimistas.length;
     const totalPaginas = Math.max(1, Math.ceil(totalItens / itensPorPagina));
@@ -125,11 +126,13 @@ function Gestao_dizimistas() {
                     </div>
 
                     <div name="tabela" className="overflow-x-auto mt-6 px-20">
+                        {console.log("id da comunidade enviada para a tabela de dizimistas: "+comunidade)}
                         <Tabela_dizimistas
                             categoria={categoriaAtiva}
                             pagina={paginaAtual}
                             itensPorPagina={itensPorPagina}
-                            dados={dizimistasFiltrados} 
+                            dados={dizimistasFiltrados}
+                            comunidade={comunidade}
                         />
                     </div>
 

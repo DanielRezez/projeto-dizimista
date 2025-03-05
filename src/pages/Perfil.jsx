@@ -41,7 +41,7 @@ function Perfil() {
 
     return (
         <Layout>
-            <section className="w-full max-w-[90%] border-amber-300 border-3 rounded-md mx-auto flex flex-col relative p-20 bg-slate-500 mt-10 mb-30">
+            <section className="w-full max-w-[90%] border-[#C9942B] border-3 rounded-md mx-auto flex flex-col relative p-20 bg-slate-500 mt-10 mb-30">
                 {/* Avatar redondo e clicável */}
                 <div className="absolute -top-15 left-1/2 -translate-x-1/2 w-[120px] h-[120px] bg-white border-[#F2EDE2] border-10 rounded-full overflow-hidden sm:-top-30 sm:w-[180px] sm:h-[180px]  md:w-[260px] md:h-[260px]">
                     <input 

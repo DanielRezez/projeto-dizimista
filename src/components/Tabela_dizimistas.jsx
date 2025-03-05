@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
+import api from "../services/api";
 
-function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
+function Tabela_dizimistas({ pagina, itensPorPagina, dados, comunidade }) {
     const inicio = (pagina - 1) * itensPorPagina;
     const fim = inicio + itensPorPagina;
     const dadosPaginados = dados.slice(inicio, fim);
@@ -9,8 +10,52 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
     const [erros, setErros] = useState({});
     const [exibirConfirmacao, setExibirConfirmacao] = useState(false);
 
+    const [modoReadOnly, setModoReadOnly] = useState(false);
+
+    const modoCriacao = !dizimistaSelecionado?.id;
+
+    const criarDizimista = async () => {
+        try {
+            // Adiciona o id_paroquia ao objeto dizimistaSelecionado
+            const dadosParaEnviar = {
+                ...dizimistaSelecionado,
+                id_paroquia: Number(comunidade),
+                ficha: Number(dizimistaSelecionado.ficha),
+                sistema: Number(dizimistaSelecionado.sistema),
+                situacao: dizimistaSelecionado.situacao,
+            
+            }; 
+    
+            console.log("Dados para enviar:", dadosParaEnviar); // Depuração
+            
+            const response = await api.post("/dizimistas/", dadosParaEnviar);
+            
+            if (response.status !== 201) {
+                throw new Error(`Erro ao cadastrar o dizimista: ${response.statusText}`);
+            }
+
+            if (!response.ok) {
+                throw new Error("Erro ao cadastrar o dizimista");
+            }
+    
+            const novoDizimista = await response.json();
+            setDizimistas([...dizimistas, novoDizimista]); // Atualiza a tabela
+            fecharEdicao(); // Fecha o modal
+    
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const abrirModalReadOnly = (dizimista) => {
+        setDizimistaSelecionado(dizimista);
+        setModoReadOnly(true); // Ativa o modo read-only
+        document.body.style.overflow = 'hidden';
+    };
+
     const abrirEdicao = (dizimista) => {
         setDizimistaSelecionado(dizimista);
+        setModoReadOnly(false);
         document.body.style.overflow='hidden';
 
     };
@@ -105,15 +150,15 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                             <tr key={index} className={`${index % 2 === 0 ? "bg-[#EDDBB8]" : "bg-white"} border-b border-[#A10013] first:border-t-2`} >
                                 <td className="px-4 py-2 text-center font-bold">{dizimista.sistema}</td>
                                 <td className="px-4 py-2 text-center">{dizimista.ficha}</td>
-                                <td className="px-4 py-2 text-[#A10013] underline text-left font-bold">{dizimista.nome}</td>
+                                <td className="px-4 py-2 text-[#A10013] underline text-left font-bold hover:text-red-600 hover:no-underline cursor-pointer transition duration-200" onClick={() => abrirModalReadOnly(dizimista)}>{dizimista.nome}</td>
                                 <td className="px-4 py-2 text-left">{dizimista.situacao === 'A' ? "Ativo" : "Inativo"}</td>
                                 <td className="px-4 py-2 text-right" h-full>
                                     <div className="relative group flex flex-row gap-2 justify-end items-center h-full">
-                                        <svg name="editar" className="hover:fill-[#A10013] cursor-pointer h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" onClick={abrirEdicao}>
+                                        <svg name="editar" className="fill-current hover:fill-[#A10013] cursor-pointer h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" onClick={() => abrirEdicao(dizimista)}>
                                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                                         </svg>
-                                        <svg name="excluir" className="hover:fill-[#A10013] cursor-pointer h-5 w-5" xmlns="http://www.w3.org/2000/svg"  fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <svg name="excluir" className="fill-current hover:fill-[#A10013] cursor-pointer h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
                                         </svg>
                                     </div>
@@ -129,12 +174,20 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
 
                 </tbody>
             </table>
+            <button 
+                    className="cursor-pointer bg-[#27AE60] max-w-200 text-white px-5 py-3 mt-10 rounded hover:bg-[#166536] transition duration-200"
+                    onClick={() => abrirEdicao({})} // Novo dizimista com objeto vazio
+                >
+                    Cadastrar Dizimista
+            </button>
 
             {dizimistaSelecionado && (
                 <div className="fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,90%)] flex items-center justify-center overflow-auto" onClick={fecharEdicao}>
-                    <div className="bg-white text-black w-[50%] h-dvh max-h-[70vh] mt-30 p-12 rounded-sm shadow-lg overflow-auto">
+                    <div className="bg-white text-black w-[50%] h-dvh max-h-[70vh] mt-30 p-12 rounded-sm shadow-lg overflow-auto" onClick={(e) => e.stopPropagation()}>
                     <h2 className="text-[#C9942B] text-center text-[4rem] font-[Tangerine] mb-10">Informações</h2>
-                        <form onSubmit={(e) => e.preventDefault()}>
+                        <form 
+                            onSubmit={(e) => e.preventDefault()}
+                        >
                             <div className="flex w-auto flex-row gap-5">
                                 {/* Ficha */}
                                 <div className="mb-6 max-w-20">
@@ -145,6 +198,7 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                         value={dizimistaSelecionado.ficha || ""}
                                         className="w-full border border-gray-300 p-2 rounded"
                                         onChange={handleInputChange}
+                                        readOnly={modoReadOnly}
                                     />
                                     {erros.ficha && <p className="text-red-500 text-sm mt-1">{erros.ficha}</p>}
                                 </div>
@@ -157,6 +211,7 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                         value={dizimistaSelecionado.sistema || ""}
                                         className="w-full border border-gray-300 p-2 rounded"
                                         onChange={handleInputChange}
+                                        readOnly={modoReadOnly}
                                     />
                                     {erros.sistema && <p className="text-red-500 text-sm mt-1">{erros.sistema}</p>}
                                 </div>
@@ -169,6 +224,7 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                         value={dizimistaSelecionado.nome || ""}
                                         className="w-full border border-gray-300 p-2 rounded"
                                         onChange={handleInputChange}
+                                        readOnly={modoReadOnly}
                                     />
                                     {erros.nome && <p className="text-red-500 text-sm mt-1">{erros.nome}</p>}
                                 </div>
@@ -184,6 +240,7 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                     value={dizimistaSelecionado.email || ""}
                                     className="w-full border border-gray-300 p-2 rounded"
                                     onChange={handleInputChange}
+                                    readOnly={modoReadOnly}
                                 />
                                 {erros.email && <p className="text-red-500 text-sm mt-1">{erros.email}</p>}
                             </div>
@@ -199,6 +256,7 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                     onChange={handleInputChange}
                                     maxLength={14}
                                     placeholder="+5511999999999"
+                                    readOnly={modoReadOnly}
                                 />
                                 {erros.telefone && <p className="text-red-500 text-sm mt-1">{erros.telefone}</p>}
                             </div>
@@ -213,6 +271,7 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                         value={dizimistaSelecionado.data_nascimento || ""}
                                         className="w-full border border-gray-300 p-2 rounded"
                                         onChange={handleInputChange}
+                                        readOnly={modoReadOnly}
                                     />
                                 </div>
                                 {/* Situação */}
@@ -220,11 +279,12 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                     <label className="block font-bold mb-2">Situação</label>
                                     <select
                                         name="situacao"
-                                        value={dizimistaSelecionado.situacao || "A"}
+                                        value={dizimistaSelecionado.situacao}
                                         className="w-full border border-gray-300 p-2 rounded"
                                         onChange={handleInputChange}
+                                        disabled={modoCriacao ? false : modoReadOnly}
                                     >
-                                        <option value="A">Ativo</option>
+                                        <option value="A" >Ativo</option>
                                         <option value="I">Inativo</option>
                                     </select>
                                 </div>
@@ -237,30 +297,34 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
                                     <label className="flex items-center gap-2">
                                         <input
                                             type="checkbox"
-                                            name="permissao_email"
+                                            name="email_permission"
                                             checked={dizimistaSelecionado.email_permission || false}
                                             onChange={handleInputChange}
+                                            disabled={modoCriacao ? false : modoReadOnly}
                                         />
                                         Permissão para e-mails automáticos
                                     </label>
                                     <label className="flex items-center gap-2">
                                         <input
                                             type="checkbox"
-                                            name="permissao_whatsapp"
+                                            name="phone_permission"
                                             checked={dizimistaSelecionado.phone_permission || false}
                                             onChange={handleInputChange}
+                                            disabled={modoCriacao ? false : modoReadOnly}
                                         />
                                         Permissão para mensagens de WhatsApp
                                     </label>
                                 </div>
-                                <div className="flex flex-wrap gap-4 self-end mt-15">
-                                    <button className="cursor-pointer bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-600 transition duration-200" onClick={fecharEdicao}>
-                                        Cancelar
-                                    </button>
-                                    <button className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200" onClick={tentarSalvar}>
-                                        Salvar
-                                    </button>
-                                </div>
+                                {!modoReadOnly && (
+                                    <div className="flex flex-wrap gap-4 self-end mt-15">
+                                        <button className="cursor-pointer bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-600 transition duration-200" onClick={fecharEdicao}>
+                                            Cancelar
+                                        </button>
+                                        <button className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200" onClick={modoCriacao ? criarDizimista : tentarSalvar}>
+                                            {modoCriacao ? "Cadastrar" : "Salvar"}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </form>
                     </div>
@@ -268,7 +332,7 @@ function Tabela_dizimistas({ pagina, itensPorPagina, dados }) {
             )}
 
             {exibirConfirmacao && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-[rgba(0,0,0,90%)]">
                     <div className="bg-white p-6 rounded shadow-lg">
                         <p>Tem certeza que deseja salvar as alterações?</p>
                         <div className="flex justify-center gap-4 mt-10">
