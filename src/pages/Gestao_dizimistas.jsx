@@ -19,6 +19,8 @@ function Gestao_dizimistas() {
     const [erros, setErros] = useState({});
     const [exibirConfirmacao, setExibirConfirmacao] = useState(false);
     const [modoReadOnly, setModoReadOnly] = useState(false);
+    const [exibirConfirmacaoDelete, setExibirConfirmacaoDelete] = useState(false);
+    const [dizimistaSelecionadoParaExclusao, setDizimistaSelecionadoParaExclusao] = useState(null);
 
     const itensPorPagina = 12;
 
@@ -207,6 +209,44 @@ function Gestao_dizimistas() {
         setExibirConfirmacao(false);
     };
 
+    const abrirModalConfirmacaoDelete = (dizimista) => {
+        setDizimistaSelecionadoParaExclusao(dizimista);
+        setExibirConfirmacaoDelete(true);
+    };
+
+    const fecharModalConfirmacaoDelete = () => {
+        setDizimistaSelecionadoParaExclusao(null);
+        setExibirConfirmacaoDelete(false);
+    };
+
+    const deletarDizimista = async () => {
+        if (!dizimistaSelecionadoParaExclusao) return;
+
+        setLoading(true);
+        setError(null);
+        setSucesso(null);
+
+        try {
+            const response = await api.delete(`/dizimistas/${dizimistaSelecionadoParaExclusao.id}/`);
+
+            if (response.status === 204) {
+                // Atualiza a lista local removendo o dizimista
+                setDizimistas(prevDizimistas => 
+                    prevDizimistas.filter(d => d.id !== dizimistaSelecionadoParaExclusao.id)
+                );
+                setSucesso("Dizimista excluído com sucesso!");
+            } else {
+                throw new Error('Erro ao excluir dizimista');
+            }
+        } catch (error) {
+            console.error("Erro ao excluir dizimista:", error);
+            setError(error.response?.data?.message || "Erro ao excluir o dizimista. Tente novamente mais tarde.");
+        } finally {
+            setLoading(false);
+            fecharModalConfirmacaoDelete();
+        }
+    };
+
     useEffect(() => {
         if (comunidade) {
             fetchDizimistas();
@@ -313,6 +353,10 @@ function Gestao_dizimistas() {
                                 onTentarSalvar={tentarSalvar}
                                 onSalvarDizimista={salvarDizimista}
                                 onCancelarConfirmacao={() => setExibirConfirmacao(false)}
+                                onDeletar={abrirModalConfirmacaoDelete}
+                                exibirConfirmacaoDelete={exibirConfirmacaoDelete}
+                                onConfirmarDelete={deletarDizimista}
+                                onCancelarDelete={fecharModalConfirmacaoDelete}
                             />
                         )}
                     </div>
