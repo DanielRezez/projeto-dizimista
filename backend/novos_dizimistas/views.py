@@ -18,17 +18,20 @@ class NovoDizimistaAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
+    def get_object(self, pk):
+        try:
+            return NovoDizimista.objects.get(pk=pk, situacao='A')
+        except NovoDizimista.DoesNotExist:
+            return None
+
     def get(self, request, pk=None):
         if pk:
-            try:
-                novo_dizimista = NovoDizimista.objects.get(pk=pk, situacao='A')
+            novo_dizimista = self.get_object(pk)
+            if novo_dizimista:
                 serializer = NovoDizimistaSerializer(novo_dizimista)
-                
                 return Response(serializer.data)
-            
-            except NovoDizimista.DoesNotExist:
-                return Response({"error", "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
-                
+            else:
+                return Response({"error": "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
         else:
             situacao = request.GET.get('status', None)
             id_paroquia = request.GET.get('id_paroquia', None)
@@ -57,22 +60,23 @@ class NovoDizimistaAPIView(APIView):
 
     def put(self, request, pk):
         novo_dizimista = self.get_object(pk)
-        serializer = NovoDizimistaSerializer(novo_dizimista, data=request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if novo_dizimista:
+            serializer = NovoDizimistaSerializer(novo_dizimista, data=request.data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
     
     def delete(self, request, pk):
-        try:
-            novo_dizimista=Dizimista.objects.get(pk=pk)
+        novo_dizimista = self.get_object(pk)
+        if novo_dizimista:
             novo_dizimista.delete()
-            
             return Response({"message": "Novo dizimista deletado com sucesso!"}, status=status.HTTP_204_NO_CONTENT)
-
-        except Dizimista.DoesNotExist:
+        else:
             return Response({"message": "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
     
 class TransferirDizimistaAPIView(APIView):

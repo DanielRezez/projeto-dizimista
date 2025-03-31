@@ -17,15 +17,21 @@ class DizimistaAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
+    def get_object(self, pk):
+        try:
+            return Dizimista.objects.get(pk=pk, situacao='A')
+        except Dizimista.DoesNotExist:
+            return None
+
     def get(self, request, pk=None):
         if pk:
-            try:
-                dizimista=Dizimista.objects.get(pk=pk, situacao='A')
+            dizimista = self.get_object(pk)
+            if dizimista:
                 serializer=DizimistaSerializer(dizimista)
                 
                 return Response(serializer.data)
             
-            except Dizimista.DoesNotExist:
+            else:
                 return Response({"error": "Dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
             
         else:
@@ -56,13 +62,17 @@ class DizimistaAPIView(APIView):
     
     def put(self, request, pk):
         dizimista = self.get_object(pk)
-        serializer = DizimistaSerializer(dizimista, data=request.data)
+        if dizimista:
+            serializer = DizimistaSerializer(dizimista, data=request.data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
     
     def delete(self, request, pk):
         try:
@@ -105,4 +115,52 @@ class AniversariantesAPIView(APIView):
         aniversariantes_serializer = DizimistaSerializer(aniversariantes, many=True)
         
         return Response({"aniversariantes": aniversariantes_serializer.data}, status=status.HTTP_200_OK)
-        
+
+class NovosDizimistasAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self, pk):
+        try:
+            return Dizimista.objects.get(pk=pk, situacao='N')
+        except Dizimista.DoesNotExist:
+            return None
+
+    def get(self, request, pk=None):
+        if pk:
+            dizimista = self.get_object(pk)
+            if dizimista:
+                serializer = DizimistaSerializer(dizimista)
+                return Response(serializer.data)
+            else:
+                return Response({"error": "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            id_paroquia = request.GET.get('id_paroquia', None)
+            dizimistas = Dizimista.objects.filter(situacao='N')
+            
+            if id_paroquia:
+                dizimistas = dizimistas.filter(id_paroquia=id_paroquia)
+            
+            serializer = DizimistaSerializer(dizimistas, many=True)
+            return Response(serializer.data)
+    
+    def put(self, request, pk):
+        dizimista = self.get_object(pk)
+        if dizimista:
+            serializer = DizimistaSerializer(dizimista, data=request.data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)
+    
+    def delete(self, request, pk):
+        dizimista = self.get_object(pk)
+        if dizimista:
+            dizimista.delete()
+            return Response({"message": "Novo dizimista deletado com sucesso!"}, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"message": "Novo dizimista não encontrado!"}, status=status.HTTP_404_NOT_FOUND)

@@ -36,7 +36,7 @@ urlpatterns = [
     # For registering users
     path('register_user/', register_user, name='register_user'),
     
-    path('me/', get_user, name="obter-usuario"),
+    path('api/me/', get_user, name="obter-usuario"),
     
     # JWT Authentication
     path('api/auth/', include('dj_rest_auth.urls')),  # Login, Logout, Password Reset
