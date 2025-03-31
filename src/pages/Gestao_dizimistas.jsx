@@ -63,48 +63,98 @@ function Gestao_dizimistas() {
         }
     }, [comunidade, situacaoFiltro]);
 
-    const atualizarDizimista = async () => {
-        setLoading(true);
-        setError(null);
-        setSucesso(null);
-        try {
-            const dadosParaEnviar = {
-                ...dizimistaSelecionado,
-                id_paroquia: Number(comunidade),
-                ficha: Number(dizimistaSelecionado.ficha),
-                sistema: Number(dizimistaSelecionado.sistema),
-                data_nascimento: dizimistaSelecionado.data_nascimento || null,
-                email_permission: dizimistaSelecionado.email_permission || false,
-                phone_permission: dizimistaSelecionado.phone_permission || false
-            };
-
-            const response = await api.put(`/dizimistas/${dizimistaSelecionado.id}/`, dadosParaEnviar);
-
-            if (!response.data) {
-                throw new Error('Resposta da API não contém dados');
+    const tratarErroAPI = (error) => {
+        if (error.response?.data) {
+            const dados = error.response.data;
+            
+            // Trata erros do tipo ValidationError com HTML
+            if (typeof dados === 'string' && dados.includes('ValidationError')) {
+                try {
+                    // Extrai a mensagem do erro do HTML
+                    const match = dados.match(/\{.*\}/);
+                    if (match) {
+                        const errorObj = JSON.parse(match[0].replace(/&#x27;/g, '"'));
+                        if (errorObj.__all__) {
+                            return errorObj.__all__[0];
+                        }
+                    }
+                } catch (e) {
+                    console.error('Erro ao parsear mensagem de erro:', e);
+                }
             }
-
-            // Atualiza o dizimista na lista local
-            setDizimistas(prevDizimistas => 
-                prevDizimistas.map(d => 
-                    d.id === dizimistaSelecionado.id ? response.data : d
-                )
-            );
-
-            setSucesso("Dizimista atualizado com sucesso!");
-            fecharEdicao();
-        } catch (error) {
-            console.error("Erro ao atualizar dizimista:", error);
-            setError(error.response?.data?.message || "Erro ao atualizar o dizimista. Tente novamente mais tarde.");
-        } finally {
-            setLoading(false);
+            
+            // Trata erros do tipo {'__all__': ['Mensagem de erro']}
+            if (dados.__all__ && Array.isArray(dados.__all__)) {
+                return dados.__all__[0];
+            }
+            
+            // Trata erros do tipo {campo: ['Mensagem de erro']}
+            if (typeof dados === 'object' && !Array.isArray(dados)) {
+                const errosTemp = {};
+                Object.keys(dados).forEach(campo => {
+                    if (Array.isArray(dados[campo])) {
+                        // Não inclui '__all__' nos erros de campo
+                        if (campo !== '__all__') {
+                            errosTemp[campo] = dados[campo][0];
+                        }
+                    } else if (typeof dados[campo] === 'string') {
+                        errosTemp[campo] = dados[campo];
+                    }
+                });
+                
+                if (Object.keys(errosTemp).length > 0) {
+                    setErros(errosTemp);
+                    return "Verifique os campos destacados.";
+                }
+            }
+            
+            // Se for uma string simples
+            if (typeof dados === 'string') {
+                return dados;
+            }
         }
+        
+        return "Ocorreu um erro. Tente novamente mais tarde.";
+    };
+
+    const validarDizimista = (dados) => {
+        const errosTemp = {};
+        
+        // Filtra apenas dizimistas ativos para validação
+        const dizimistasAtivos = dizimistas.filter(d => d.situacao === 'A');
+        
+        // Validação de ficha existente
+        const fichaExistente = dizimistasAtivos.find(d => 
+            d.ficha === Number(dados.ficha) && 
+            d.id_paroquia === Number(comunidade) &&
+            (!dados.id || d.id !== dados.id)  // Ignora o próprio registro ao editar
+        );
+        
+        if (fichaExistente) {
+            errosTemp.ficha = "Já existe um dizimista ativo com esse número nesta paróquia!";
+        }
+
+        // Validação de email existente
+        if (dados.email) {
+            const emailExistente = dizimistasAtivos.find(d => 
+                d.email === dados.email && 
+                (!dados.id || d.id !== dados.id)  // Ignora o próprio registro ao editar
+            );
+            
+            if (emailExistente) {
+                errosTemp.email = "Este e-mail já está cadastrado para outro dizimista ativo!";
+            }
+        }
+
+        return errosTemp;
     };
 
     const criarDizimista = async () => {
         setLoading(true);
         setError(null);
         setSucesso(null);
+        setErros({});
+        
         try {
             const dadosParaEnviar = {
                 ...dizimistaSelecionado,
@@ -117,20 +167,72 @@ function Gestao_dizimistas() {
                 phone_permission: dizimistaSelecionado.phone_permission || false
             };
 
+            // Validação frontend
+            const errosValidacao = validarDizimista(dadosParaEnviar);
+            if (Object.keys(errosValidacao).length > 0) {
+                setErros(errosValidacao);
+                setError("Verifique os campos destacados.");
+                return;
+            }
+
             const response = await api.post("/dizimistas/", dadosParaEnviar);
 
             if (!response.data) {
                 throw new Error('Resposta da API não contém dados');
             }
 
-            // Adiciona o novo dizimista à lista local
             setDizimistas(prevDizimistas => [...prevDizimistas, response.data]);
-
             setSucesso("Dizimista cadastrado com sucesso!");
             fecharEdicao();
         } catch (error) {
             console.error("Erro ao criar dizimista:", error);
-            setError(error.response?.data?.message || "Erro ao cadastrar o dizimista. Tente novamente mais tarde.");
+            setError(tratarErroAPI(error));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const atualizarDizimista = async () => {
+        setLoading(true);
+        setError(null);
+        setSucesso(null);
+        setErros({});
+        
+        try {
+            const dadosParaEnviar = {
+                ...dizimistaSelecionado,
+                id_paroquia: Number(comunidade),
+                ficha: Number(dizimistaSelecionado.ficha),
+                sistema: Number(dizimistaSelecionado.sistema),
+                data_nascimento: dizimistaSelecionado.data_nascimento || null,
+                email_permission: dizimistaSelecionado.email_permission || false,
+                phone_permission: dizimistaSelecionado.phone_permission || false
+            };
+
+            // Validação frontend
+            const errosValidacao = validarDizimista(dadosParaEnviar);
+            if (Object.keys(errosValidacao).length > 0) {
+                setErros(errosValidacao);
+                setError("Verifique os campos destacados.");
+                return;
+            }
+
+            const response = await api.put(`/dizimistas/${dizimistaSelecionado.id}/`, dadosParaEnviar);
+
+            if (!response.data) {
+                throw new Error('Resposta da API não contém dados');
+            }
+
+            setDizimistas(prevDizimistas => 
+                prevDizimistas.map(d => 
+                    d.id === dizimistaSelecionado.id ? response.data : d
+                )
+            );
+            setSucesso("Dizimista atualizado com sucesso!");
+            fecharEdicao();
+        } catch (error) {
+            console.error("Erro ao atualizar dizimista:", error);
+            setError(tratarErroAPI(error));
         } finally {
             setLoading(false);
         }
@@ -230,7 +332,6 @@ function Gestao_dizimistas() {
             const response = await api.delete(`/dizimistas/${dizimistaSelecionadoParaExclusao.id}/`);
 
             if (response.status === 204) {
-                // Atualiza a lista local removendo o dizimista
                 setDizimistas(prevDizimistas => 
                     prevDizimistas.filter(d => d.id !== dizimistaSelecionadoParaExclusao.id)
                 );
@@ -267,13 +368,28 @@ function Gestao_dizimistas() {
         fetchParoquias();
     }, []);
 
+    useEffect(() => {
+        if (error || sucesso) {
+            const timer = setTimeout(() => {
+                setError(null);
+                setSucesso(null);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [error, sucesso]);
+
     return (
         <Layout>
             <div className="flex flex-col items-start justify-start min-h-screen w-full px-[5%]">
-                {error && <div className="text-red-500 mb-4">{error}</div>}
+                {error && (
+                    <div className="fixed top-4 right-4 max-w-md bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50 shadow-lg" role="alert">
+                        <p className="text-sm">{error}</p>
+                    </div>
+                )}
                 {sucesso && (
-                    <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
-                        {sucesso}
+                    <div className="fixed top-4 right-4 max-w-md bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50 shadow-lg" role="alert">
+                        <p className="text-sm">{sucesso}</p>
                     </div>
                 )}
                 <div className="flex flex-row gap-5 w-full mb-4">
@@ -332,7 +448,7 @@ function Gestao_dizimistas() {
                         </button>
                     </div>
 
-                    <div name="tabela" className="overflow-x-auto mt-6 px-20">
+                    <div className="overflow-x-auto mt-6 px-20">
                         {loading ? (
                             <div>Carregando...</div>
                         ) : (
