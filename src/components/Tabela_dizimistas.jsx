@@ -70,8 +70,14 @@ function Tabela_dizimistas({
 
             {/* Botão de cadastro */}
             <button
-                className="cursor-pointer bg-[#27AE60] max-w-200 text-white px-5 py-3 mt-10 rounded hover:bg-[#166536] transition duration-200"
+                className={`cursor-pointer max-w-200 px-5 py-3 mt-10 rounded transition duration-200 ${
+                    comunidade 
+                        ? "bg-[#27AE60] text-white hover:bg-[#166536]" 
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
                 onClick={() => onAbrirEdicao({})}
+                disabled={!comunidade}
+                title={!comunidade ? "Selecione uma comunidade para cadastrar" : ""}
             >
                 Cadastrar Dizimista
             </button>
@@ -90,7 +96,7 @@ function Tabela_dizimistas({
                                         type="text"
                                         name="ficha"
                                         value={dizimistaSelecionado.ficha || ""}
-                                        className="w-full border border-gray-300 p-2 rounded"
+                                        className={`w-full p-2 rounded border ${erros.ficha ? 'border-red-300 focus:border-red-500' : 'border-gray-300'}`}
                                         onChange={onInputChange}
                                         readOnly={modoReadOnly}
                                     />
@@ -104,7 +110,7 @@ function Tabela_dizimistas({
                                         type="text"
                                         name="sistema"
                                         value={dizimistaSelecionado.sistema || ""}
-                                        className="w-full border border-gray-300 p-2 rounded"
+                                        className={`w-full p-2 rounded border ${erros.sistema ? 'border-red-300 focus:border-red-500' : 'border-gray-300'}`}
                                         onChange={onInputChange}
                                         readOnly={modoReadOnly}
                                     />
@@ -119,7 +125,7 @@ function Tabela_dizimistas({
                                     type="text"
                                     name="nome"
                                     value={dizimistaSelecionado.nome || ""}
-                                    className="w-full border border-gray-300 p-2 rounded"
+                                    className={`w-full p-2 rounded border ${erros.nome ? 'border-red-300 focus:border-red-500' : 'border-gray-300'}`}
                                     onChange={onInputChange}
                                     readOnly={modoReadOnly}
                                 />
@@ -133,7 +139,7 @@ function Tabela_dizimistas({
                                     type="email"
                                     name="email"
                                     value={dizimistaSelecionado.email || ""}
-                                    className="w-full border border-gray-300 p-2 rounded"
+                                    className={`w-full p-2 rounded border ${erros.email ? 'border-red-300 focus:border-red-500' : 'border-gray-300'}`}
                                     onChange={onInputChange}
                                     readOnly={modoReadOnly}
                                 />
@@ -147,7 +153,7 @@ function Tabela_dizimistas({
                                     type="tel"
                                     name="telefone"
                                     value={dizimistaSelecionado.telefone || ""}
-                                    className="w-full border border-gray-300 p-2 rounded"
+                                    className={`w-full p-2 rounded border ${erros.telefone ? 'border-red-300 focus:border-red-500' : 'border-gray-300'}`}
                                     onChange={onInputChange}
                                     readOnly={modoReadOnly}
                                     placeholder="+5511999999999"
@@ -162,7 +168,7 @@ function Tabela_dizimistas({
                                     type="date"
                                     name="data_nascimento"
                                     value={dizimistaSelecionado.data_nascimento || ""}
-                                    className="w-full border border-gray-300 p-2 rounded"
+                                    className={`w-full p-2 rounded border ${erros.data_nascimento ? 'border-red-300 focus:border-red-500' : 'border-gray-300'}`}
                                     onChange={onInputChange}
                                     readOnly={modoReadOnly}
                                 />
@@ -174,7 +180,7 @@ function Tabela_dizimistas({
                                 <select
                                     name="situacao"
                                     value={dizimistaSelecionado.situacao || "A"}
-                                    className="w-full border border-gray-300 p-2 rounded"
+                                    className="w-full p-2 rounded border border-gray-300"
                                     onChange={onInputChange}
                                     disabled={modoReadOnly}
                                 >

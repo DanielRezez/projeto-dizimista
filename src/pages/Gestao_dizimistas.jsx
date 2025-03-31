@@ -34,6 +34,10 @@ function Gestao_dizimistas() {
         );
     }, [termoBusca, categoriaAtiva, dizimistas, novosDizimistas]);
 
+    const getEndpoint = () => {
+        return categoriaAtiva === "dizimistas" ? "/dizimistas/" : "/novos-dizimistas/";
+    };
+
     const fetchDizimistas = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -171,17 +175,23 @@ function Gestao_dizimistas() {
             const errosValidacao = validarDizimista(dadosParaEnviar);
             if (Object.keys(errosValidacao).length > 0) {
                 setErros(errosValidacao);
-                setError("Verifique os campos destacados.");
+                setError("Por favor, preencha os campos corretamente");
                 return;
             }
 
-            const response = await api.post("/dizimistas/", dadosParaEnviar);
+            const endpoint = getEndpoint();
+            const response = await api.post(endpoint, dadosParaEnviar);
 
             if (!response.data) {
                 throw new Error('Resposta da API não contém dados');
             }
 
-            setDizimistas(prevDizimistas => [...prevDizimistas, response.data]);
+            if (categoriaAtiva === "dizimistas") {
+                setDizimistas(prevDizimistas => [...prevDizimistas, response.data]);
+            } else {
+                setNovosDizimistas(prevDizimistas => [...prevDizimistas, response.data]);
+            }
+            
             setSucesso("Dizimista cadastrado com sucesso!");
             fecharEdicao();
         } catch (error) {
@@ -213,21 +223,31 @@ function Gestao_dizimistas() {
             const errosValidacao = validarDizimista(dadosParaEnviar);
             if (Object.keys(errosValidacao).length > 0) {
                 setErros(errosValidacao);
-                setError("Verifique os campos destacados.");
+                setError("Por favor, preencha os campos corretamente");
                 return;
             }
 
-            const response = await api.put(`/dizimistas/${dizimistaSelecionado.id}/`, dadosParaEnviar);
+            const endpoint = getEndpoint();
+            const response = await api.put(`${endpoint}${dizimistaSelecionado.id}/`, dadosParaEnviar);
 
             if (!response.data) {
                 throw new Error('Resposta da API não contém dados');
             }
 
-            setDizimistas(prevDizimistas => 
-                prevDizimistas.map(d => 
-                    d.id === dizimistaSelecionado.id ? response.data : d
-                )
-            );
+            if (categoriaAtiva === "dizimistas") {
+                setDizimistas(prevDizimistas => 
+                    prevDizimistas.map(d => 
+                        d.id === dizimistaSelecionado.id ? response.data : d
+                    )
+                );
+            } else {
+                setNovosDizimistas(prevDizimistas => 
+                    prevDizimistas.map(d => 
+                        d.id === dizimistaSelecionado.id ? response.data : d
+                    )
+                );
+            }
+            
             setSucesso("Dizimista atualizado com sucesso!");
             fecharEdicao();
         } catch (error) {
@@ -329,12 +349,19 @@ function Gestao_dizimistas() {
         setSucesso(null);
 
         try {
-            const response = await api.delete(`/dizimistas/${dizimistaSelecionadoParaExclusao.id}/`);
+            const endpoint = getEndpoint();
+            const response = await api.delete(`${endpoint}${dizimistaSelecionadoParaExclusao.id}/`);
 
             if (response.status === 204) {
-                setDizimistas(prevDizimistas => 
-                    prevDizimistas.filter(d => d.id !== dizimistaSelecionadoParaExclusao.id)
-                );
+                if (categoriaAtiva === "dizimistas") {
+                    setDizimistas(prevDizimistas => 
+                        prevDizimistas.filter(d => d.id !== dizimistaSelecionadoParaExclusao.id)
+                    );
+                } else {
+                    setNovosDizimistas(prevDizimistas => 
+                        prevDizimistas.filter(d => d.id !== dizimistaSelecionadoParaExclusao.id)
+                    );
+                }
                 setSucesso("Dizimista excluído com sucesso!");
             } else {
                 throw new Error('Erro ao excluir dizimista');
