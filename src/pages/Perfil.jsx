@@ -5,7 +5,7 @@ import api from "../services/api";
 
 function Perfil() {
     const navigate = useNavigate();
-    const [imagem, setImagem] = useState(localStorage.getItem("fotoPerfil") || "./src/assets/Logo.png");
+    const [imagem, setImagem] = useState(localStorage.getItem("fotoPerfil") || "/assets/Logo.png");
     const [userData, setUserData] = useState({
         first_name: localStorage.getItem("nomeUsuario") || "",
         username: localStorage.getItem("username") || ""

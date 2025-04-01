@@ -9,8 +9,8 @@ function Footer() {
                 Toda a Lei e os Profetas dependem desses dois mandamentos” (Mt  22, 37;40).
                 </p>
                 <div className="flex justify-center items-center gap-[20px] max-[360px]:mt-[5px] min-[460px]:mt-[35px]">
-                    <img className="max-w-15" src="./src/assets/heart.svg" />
-                    <img className="max-w-15" src="./src/assets/Brasão.png" />
+                    <img className="max-w-15" src="/assets/heart.svg" />
+                    <img className="max-w-15" src="/assets/Brasão.png" />
                 </div>
             </footer>
         </>
