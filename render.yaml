@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: portal-dizimista
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn portal_dizimista.wsgi:application"
